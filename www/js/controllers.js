@@ -496,7 +496,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	}
 })
    
-.controller('buscaListaCtrl', function($scope, $state, $ionicPopup, AuthService, BuscaServices, $timeout, $ionicSideMenuDelegate, $ionicLoading, $compile, $cordovaGeolocation, $ionicLoading) {
+.controller('buscaListaCtrl', function($scope, $state, $ionicPopup, AuthService, BuscaServices, $timeout, $ionicSideMenuDelegate, $ionicLoading, $compile, $cordovaGeolocation) {
 	if( !AuthService.isAuthenticated() ){
 		var alertPopup = $ionicPopup.alert({
             title: 'Atenção!',
@@ -504,7 +504,9 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
         });
 		alertPopup.then(function(res) { $state.go('login'); });
 	}
+
 	$scope.searchItens = BuscaServices.buscaRaio();
+	
 	$scope.data = {
 		distancia: 50
 	}
@@ -523,10 +525,10 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 			$cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true}).then(function(position){
 				window.localStorage.setItem('USER_DETAIL_latA',position.coords.latitude);
 				window.localStorage.setItem('USER_DETAIL_LgtA',position.coords.longitude);
-				BuscaServices.buscaRaio($scope.data.distancia,position.coords.latitude, position.coords.longitude).then(function(result){$scope.searchItens = result;if(map){refreshMap()};$ionicLoading.hide();});		   
+				BuscaServices.buscaRaio($scope.data.distancia,position.coords.latitude, position.coords.longitude).then(function(result){$scope.searchItens = result;$ionicLoading.hide();if(map){refreshMap()};});		   
 			}, function(error){
 			  ////console.log("Cant get a location = "+error)
-			  //$ionicLoading.hide();
+			  $ionicLoading.hide();
 			});
         }, 1000); 
     });
@@ -613,8 +615,9 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		window.localStorage.setItem('USER_DETAIL_ID', amigo.Guid)
 		$state.go('perfil');
 	}	
-	$scope.buscar = function(){ 
-		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result; });
+	$scope.buscar = function(){
+		$ionicLoading.show();
+		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result;$ionicLoading.hide();});
 	}
     $scope.data = { inputSearch: '' };
     /*$scope.search = function(item) {

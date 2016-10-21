@@ -101,6 +101,12 @@ angular.module('app.services', ['firebase'])
 					url : "http://olaapp.azurewebsites.net/Amizade/ListarAmigos?Guid="+AuthService.getUserId(),
 					params:busca					
 				}).then(function mySucces(response) { 
+					for(var i = 0;i < response.data.result.length; i++){						
+						if(response.data.result[i].Foto){
+							response.data.result[i].Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].Foto;
+							response.data.result[i].ThumbFoto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].ThumbFoto;
+						}
+					} 
 					resolve(response.data.result);
 				}, function myError(response) { 
 					reject('Erro.');
@@ -152,6 +158,12 @@ angular.module('app.services', ['firebase'])
 					method : "GET",
 					url : "http://olaapp.azurewebsites.net/Amizade/ListarSolicitacao?Guid="+AuthService.getUserId()					
 				}).then(function mySucces(response) { 
+					for(var i = 0;i < response.data.result.length; i++){						
+						if(response.data.result[i].Foto){
+							response.data.result[i].Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].Foto;
+							response.data.result[i].ThumbFoto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].ThumbFoto;
+						}
+					}					
 					resolve(response.data.result);
 				}, function myError(response) { 
 					reject('Erro.');
@@ -203,7 +215,7 @@ angular.module('app.services', ['firebase'])
 					}				
 					 cbk && cbk(response.data);
 				}, function myError(response) {
-					reject('Erro.');
+					reject('Erro.'); 
 				});
 			});			
 		}
@@ -219,7 +231,10 @@ angular.module('app.services', ['firebase'])
 					method : "GET",
 					url : "http://olaapp.azurewebsites.net/Usuario/ObterPerfil",
 					params:params
-				}).then(function mySucces(response) {
+				}).then(function mySucces(response) { 					 
+					if(response.data.Foto){						
+						response.data.Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.Foto; 
+					}					 
 					resolve(response.data);
 				}, function myError(response) {
 					reject('Erro.');

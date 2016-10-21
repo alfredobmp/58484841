@@ -365,12 +365,14 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 	
 	function loadPerfil(){
+		$ionicLoading.show();
 		var chatId = window.localStorage.getItem('chatId'); 
 		var id = window.localStorage.getItem('USER_DETAIL_ID');
 		var latA = window.localStorage.getItem('USER_DETAIL_latA');
 		var LgtA = window.localStorage.getItem('USER_DETAIL_LgtA');
-		if(id){		  
+		if(id){	
 			UsuarioServices.getPerfil(id,latA,LgtA).then(function(perfil){	
+				$ionicLoading.hide();
 				$scope.perfil.nome = perfil.Nome;
 				$scope.perfil.avatar = perfil.Foto;
 				$scope.perfil.added = perfil.Amigo;
@@ -515,17 +517,18 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
         }   
         timeoutId = $timeout( function()
         {   
+			$ionicLoading.show();
             $timeout.cancel(timeoutId);
             timeoutId = null; 
 			$cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true}).then(function(position){
 				window.localStorage.setItem('USER_DETAIL_latA',position.coords.latitude);
 				window.localStorage.setItem('USER_DETAIL_LgtA',position.coords.longitude);
-				BuscaServices.buscaRaio($scope.data.distancia,position.coords.latitude, position.coords.longitude).then(function(result){$scope.searchItens = result;if(map){refreshMap()}});		   
+				BuscaServices.buscaRaio($scope.data.distancia,position.coords.latitude, position.coords.longitude).then(function(result){$scope.searchItens = result;if(map){refreshMap()};$ionicLoading.hide();});		   
 			}, function(error){
 			  ////console.log("Cant get a location = "+error)
 			  //$ionicLoading.hide();
 			});
-        }, 500); 
+        }, 1000); 
     });
 	
 	
@@ -611,7 +614,8 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		$state.go('perfil');
 	}	
 	$scope.buscar = function(){
-		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result;});
+		$ionicLoading.show();
+		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result;$ionicLoading.hide();});
 	}
     $scope.data = { inputSearch: '' };
     /*$scope.search = function(item) {
@@ -630,7 +634,9 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
         });
 		alertPopup.then(function(res) { $state.go('login'); });
 	}	
-	BuscaServices.solicitacoes().then(function(firends){$scope.friends = firends;});
+	
+	$ionicLoading.show();
+	BuscaServices.solicitacoes().then(function(firends){$scope.friends = firends;$ionicLoading.hide();});
 	$scope.show = function(amigo){	
 		window.localStorage.setItem('USER_DETAIL_ID',amigo.Guid);
 		$state.go('perfil');
@@ -655,9 +661,13 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	var arrChatMensages = [];
 	var arrChats = [];
 	
+	var load = 0;
 	  
 	var arrUpdate = [];	
 	ref.on("value", function(s) {
+		if(load == 0){
+			$ionicLoading.show();
+		}
 		var arr = s.val();
 		for(var i in arr){
 			var o = {};
@@ -694,6 +704,10 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 			$scope.mensagens.push(o);
 			arrChatMensages.push(o.id);	 
 			
+		}
+		if(load == 0){
+			$ionicLoading.hide();
+			load = 1;
 		}
 	});
 

@@ -613,9 +613,8 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		window.localStorage.setItem('USER_DETAIL_ID', amigo.Guid)
 		$state.go('perfil');
 	}	
-	$scope.buscar = function(){
-		$ionicLoading.show();
-		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result;$ionicLoading.hide();});
+	$scope.buscar = function(){ 
+		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result; });
 	}
     $scope.data = { inputSearch: '' };
     /*$scope.search = function(item) {

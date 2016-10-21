@@ -1,0 +1,42 @@
+<ion-view title="Olá" id="page2" class=" " ng-init="doSomething()">
+    <ion-content padding="true" class="has-header" style="padding-bottom:70px">
+        <ion-list id="" class=" ">
+        <form id="dados" class="list novaConta" name="$parent.dados" ng-model="form" novalidate form-manager >
+            <ion-item class="item-avatar  " id="meuPerfil-list-item3">
+                <img src="{{avatar}}" />
+                <button class="button button-small icon-left ion-edit button-positive" ng-click="trocarImagem()">&nbsp;Trocar imagem&nbsp;</button>
+            </ion-item>
+            <label class="item item-input" id="login-input1">
+                <i class="icon ion-email {{ (!dados.email.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                <input type="email" name="email" placeholder="Email" ng-model="data.email" maxlength="50" ng-maxlength="50" required/>
+            </label>
+            <label class="item item-input " id="login-input3">
+                <i class="icon ion-android-person {{ (!dados.nome.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                <input type="text" name="nome" placeholder="Nome do usuário" ng-model="data.nome" maxlength="50" ng-maxlength="50" required/>
+            </label>
+            <label class="item item-input " id="login-input4">
+                <i class="icon ion-calendar {{ (!dados.date.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                <input type="text" name="date" onfocus="(this.type='date')" placeholder="Data de nascimento" ng-model="data.date" required/>
+            </label>
+            <label class="item item-select " id="login-input5">
+                <i class="icon ion-person-stalker {{ (!dados.sexo.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp; 
+                <small class="cinza">{{arrSexo[data.sexo]}}</small> &nbsp; 
+                <select ng-model="data.sexo" name="sexo" required>
+                    <option ng-repeat="sexo in arrSexo" value="{{sexo}}" ng-init="arrSexo='0'">{{sexo}}</option>
+                </select>
+            </label>
+			
+        </form>
+        </ion-list>
+        <h4 class="preto">Áreas de interesses</h4>
+			<ion-list>
+				<ion-item collection-repeat="item in interesses" class="item-icon-left  item-icon-right" ng-click="preferencias($index)">
+					<i class="icon positive {{ ((item.gosto.length + item.naogosto.length ) > 0) ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'}}"></i>
+					<p>{{item.text}}</p>
+				</ion-item>
+			</ion-list>
+    </ion-content>
+    <ion-footer-bar class="bar-positive">
+      <button class="button button-full button-positive" ng-click="salvar()">SALVAR</button>
+    </ion-footer-bar>
+</ion-view>

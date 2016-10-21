@@ -1,0 +1,149 @@
+
+[ng-app=app] .bar, [ng-app=app] .bar.bar-positive.bar-footer.bar-positive{
+	background: #006d8e;
+	border-color: #037691;
+}
+[ng-app=app] .tabs-positive > .tabs{
+	background: #006d8e;
+	border-color: #037691;
+	box-shadow: rgba(0,0,0,.3) 0 3px 10px;
+}
+
+[ng-app=app] .button, [ng-app=app] .button:active, [ng-app=app] .button:hover, [ng-app=app] .button.button-clear:hover{
+	background: #037691;
+	color: #fff;
+}
+[ng-app=app] .button.button-outline{
+	color: #037691;
+	border-color: #037691;
+}
+[ng-app=app] .button.button-clear{
+	color: #037691;
+}
+[ng-app=app] .button.button-clear.button-icon, [ng-app=app] .button.button-clear.back-button{
+	background: transparent;
+	color: #fff;
+}
+[ng-app=app] .view{
+	background: #86a7bc;
+}
+[ng-app=app] .bar-footer .button{
+	margin-top: 0;
+	background: none;
+}
+[ng-app=app] .bar-subheader {
+	top:105px;
+    height: 120px;
+    background: transparent;
+    border:none;
+}
+[ng-app=app] .has-header.has-subheader.has-tabs-top {
+    top: 215px;
+}
+[ng-app=app] .backdrop {
+    background-color: rgba(255,255,255,.5);
+}
+[ng-app=app] .loading-container .loading{
+    background-color: transparent;
+}
+[ng-app=app] .spinner.spinner-positive {
+    stroke: #037691;
+    fill: #037691;
+}
+
+.checkbox-positive input:checked:before, .checkbox-positive input:checked + .checkbox-icon:before {
+    background: #037691;
+    border-color: #037691;
+}
+.checkbox input:checked:before, .checkbox input:checked + .checkbox-icon:before {
+    background: #037691;
+    border-color: #037691;
+}
+.checkbox-positive input:before, .checkbox-positive .checkbox-icon:before {
+    border-color: #037691;
+}
+.positive, a.positive {
+    color: #037691;
+}
+
+.icon-double{
+	margin-right:45px;
+}
+
+.cinza{
+    color: #aaa;
+}
+.preto{
+    color: #000;
+}
+
+.logo_login{
+	width: 100%;
+	padding: 25px 0;
+	text-align: center;
+}
+
+#login-list2 .item{
+	margin: 4px 0;
+}
+
+.scroll {
+    height: 100%;
+}
+ 
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.padding{
+	padding:10px;
+}
+
+#mensagensList .linha{
+	display:inline-block;
+	width: 100%;
+	border:none;
+	padding: 5px 15px;
+}
+#mensagensList .linha span{
+	display:block;
+	width: 100%;
+	white-space: initial;
+}
+#mensagensList .me{
+	float:right;
+	text-align: right;
+	color:#fff;
+	background: rgba(3,118,145,.5);
+	padding:10px;
+	border-radius:10px 10px 0 10px;
+	max-width: 50%;
+}
+#mensagensList .me p{
+	color:#fff;
+}
+#mensagensList .other{
+	float:left;
+	text-align: left;
+	color:#666;
+	border:1px solid #037691;
+	padding:10px;
+	border-radius:10px 10px 10px 0;
+	max-width: 50%;
+}
+
+#sender {
+  height:60px;
+  padding:1px 10px 2px 2px;
+}
+#sender textarea {
+  resize: none;
+  height:56px;
+  width:100%;
+  padding-left:10px; 
+}
+
+#termos small{
+	white-space: initial;
+}

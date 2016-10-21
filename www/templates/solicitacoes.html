@@ -1,0 +1,10 @@
+<ion-view title="Olá" id="page5" class=" ">
+    <ion-content padding="true" class="has-header">
+        <ion-list id="amigos-list5" class=" ">
+            <ion-item class="item-avatar item-icon-right" ng-repeat="item in friends|filter:search" item="item" ng-click="show({{item}})">
+                <img src="{{item.Foto}}" />
+                <p>{{item.Nome}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

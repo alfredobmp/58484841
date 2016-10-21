@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget id="br.com.ibiatec.mosaico" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>ola</name>
+  <description>
+        Olá
+    </description>
+  <author email="contato@ibiatec.com.br" href="http://www.ibiatec.com.br/">
+      IBIATEC
+    </author>
+  <content src="index.html"/>
+  <access origin="*"/>
+  <preference name="Orientation" value="portrait" />
+  <preference name="webviewbounce" value="false"/>
+  <preference name="UIWebViewBounce" value="false"/>
+  <preference name="DisallowOverscroll" value="true"/>
+  <preference name="SplashScreenDelay" value="2000"/>
+  <preference name="android-minSdkVersion" value="16"/>
+  <preference name="BackupWebStorage" value="none"/>
+  <preference name="SplashScreen" value="screen.png"/>
+  <plugin name="cordova-plugin-device" spec="1.1.2" />
+  <plugin name="cordova-plugin-camera" spec="2.2.0" />
+  <plugin name="cordova-plugin-console" spec="1.0.3" />
+  <plugin name="cordova-plugin-whitelist" spec="1.2.2" />
+  <plugin name="cordova-plugin-splashscreen" spec="3.2.2" />
+  <plugin name="cordova-plugin-statusbar" spec="2.1.3" />
+  <plugin name="cordova-plugin-file-transfer"  />
+  <plugin name="org.apache.cordova.geolocation" spec="0.3.10" source="pgb" />
+  <feature name="StatusBar">
+    <param name="ios-package" value="CDVStatusBar" onload="true"/>
+  </feature>
+  <platform name="android">
+    <icon src="resources/icon.png"/>
+    <splash src="resources/splash.png"/>
+  </platform>
+  <platform name="ios">
+    <icon src="resources/icon.png" width="57" height="57"/>
+    <splash src="resources/splash.png" height="1136" width="640"/>
+  </platform>
+</widget>

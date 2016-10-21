@@ -1,0 +1,34 @@
+<ion-view hide-nav-bar="false" title="Olá - Nova Conta" id="page7" class=" ">
+    <ion-content padding="true" class="">
+        <form id="novaContaForm" class="list novaConta" name="$parent.novaContaForm" ng-model="form" novalidate form-manager >
+        <ion-list id="novaConta-list1" class=" ">
+            <label class="item item-input" id="login-input1">
+                <i class="icon ion-email {{ (!novaContaForm.email.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                <input type="email" name="email" placeholder="Email" ng-model="data.Email" maxlength="50" ng-maxlength="50" required/>
+            </label>
+            <label class="item item-input " id="login-input2">
+                <i class="icon ion-locked {{ (!novaContaForm.senha.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                <input type="password" name="senha" placeholder="Senha" ng-model="data.Senha" maxlength="10" ng-minlength="5" ng-maxlength="10" required/>
+            </label>
+            <label class="item item-input " id="login-input3">
+                <i class="icon ion-android-person {{ (!novaContaForm.nome.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                <input type="text" name="nome" placeholder="Nome do usuário" ng-model="data.Nome" maxlength="50" ng-maxlength="50" required/>
+            </label>
+            <label class="item item-input " id="login-input4">
+                <i class="icon ion-calendar {{ (!novaContaForm.date.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                <input type="text" name="date" onfocus="(this.type='date')" placeholder="Data de nascimento" ng-model="data.Nascimento" required/>
+            </label>
+            <label class="item item-select " id="login-input5">
+                <i class="icon ion-person-stalker {{ (!novaContaForm.sexo.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp; <small class="cinza">Sexo</small> &nbsp; 
+                <select ng-model="data.Genero" name="sexo" required>
+                    <option ng-repeat="sexo in arrSexo" value="{{sexo}}" ng-init="arrSexo='0'">{{sexo}}</option>
+                </select>
+            </label>
+            <label class="item" id="termos" ng-click="modal.show()">
+                <i class="icon ion-android-warning positive"></i> &nbsp; <small class="">Ao clicar em CRIAR, você concorda com os nossos <a class="positive">Termos de Política e Privacidade</a></small> 
+            </label>
+        </ion-list>
+        </form>
+       <button id="novaConta-button4" class=" button button-positive button-full " ng-click="criar()">CRIAR</button>
+    </ion-content>
+</ion-view>

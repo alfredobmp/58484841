@@ -1,0 +1,33 @@
+<ion-view title="Olá" id="page7" class=" ">
+    <ion-content padding="true" class="has-header">
+        
+        <ion-list id="perfil-list6" class=" ">
+            <ion-item class="item-avatar  " id="perfil-list-item10">
+                <img src="{{perfil.avatar}}" ng-click="view()"/>
+                <h2>{{perfil.nome}}</h2> 
+                <p>{{perfil.distancia}} km <span ng-show="perfil.old==true"> á 3 horas atrás</span></p>
+            </ion-item>
+        </ion-list>
+        <h4 style="color:#000000;" class=" ">Gosto de</h4>
+        <ion-list>
+            <ion-item ng-repeat="item in gosto" class="">
+                <p>{{item.text}}</p>
+            </ion-item>
+        </ion-list>
+        <h4 style="color:#000000;" class=" ">Não gosto de</h4>
+       <ion-list>
+            <ion-item ng-repeat="item in naogosto" class="">
+                <p>{{item.text}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+	
+    <ion-footer-bar class="bar-positive" >
+        <div class=" button-bar ">
+            <button class="button button-positive button-block icon ion-trash-b" ng-show="perfil.added" ng-click="remove(perfil.Guid)"></button>
+            <button class="button button-positive button-block icon ion-android-add-circle" ng-show="!perfil.added" ng-click="add(perfil.Guid)"></button>
+            <button class="button button-positive button-block icon ion-alert-circled" ng-show="perfil.added" ng-click="report()"></button>
+            <button class="button button-positive button-block icon ion-android-chat" ng-show="perfil.added" ng-click="mensagem()"></button>
+        </div>
+    </ion-footer-bar>
+</ion-view>

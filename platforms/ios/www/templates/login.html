@@ -1,0 +1,22 @@
+<ion-view hide-nav-bar="true" title="Login" id="page5" class="view">
+    <ion-content padding="true" class="">
+        <div class='logo_login'>
+            <img src='css/i/logo_login.png' />
+        </div>
+        <form id="login-form1" class="list ">
+            <ion-list id="login-list2" class=" ">
+                <label class="item item-input " id="login-input1">
+                    <span class="input-label">Email</span>
+                    <input type="email" placeholder="" ng-model="data.username" >
+                </label>
+                <label class="item item-input " id="login-input2">
+                    <span class="input-label">Senha</span>
+                    <input type="password" placeholder="" ng-model="data.password" >
+                </label>
+            </ion-list>
+            <button id="login-button1" class=" button button-stable  button-block " ng-click="login()">Entrar</button>
+            <a href="#/criar" id="login-button2" class=" button button-positive  button-block button-clear ">Ou crie uma conta</a>
+            <a id="login-button3" class=" button button-positive button-block button-clear " ng-click="esqueceuSenha()">Esqueceu a senha?</a>
+        </form>
+    </ion-content>
+</ion-view>

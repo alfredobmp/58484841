@@ -1,0 +1,18 @@
+<ion-view title="Mensagem" id="" class=" ">
+    <ion-content padding="false" class="has-header" id="mensagensList">
+        <ion-item class="linha" item="msg" ng-repeat="msg in mensagens" >
+            <div class="{{msg.type}}">
+                <span>{{msg.text}}</span>
+                <small>{{msg.hour}}</small>
+                <i class="icon ion-android-done positive" ng-show="msg.status==1"></i>
+                <i class="icon ion-android-done-all positive" ng-show="msg.status==2"></i>
+                <i class="icon ion-android-time positive" ng-show="msg.status==0"></i>
+            </div>
+        </ion-item>
+    </ion-content>
+
+    <ion-footer-bar class="bar-positive" id="sender">
+        <textarea placeholder="Mensagem" ng-model="mensagem.text"></textarea>
+        <button class="button button-icon icon positive ion-android-send" ng-click="send()"></button>
+    </ion-footer-bar>
+</ion-view>

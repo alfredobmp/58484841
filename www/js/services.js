@@ -198,6 +198,9 @@ angular.module('app.services', ['firebase'])
 					method : "GET",
 					url : "http://olaapp.azurewebsites.net/Usuario/Obter?Guid="+AuthService.getUserId()
 				}).then(function mySucces(response) { 
+					if(response.data && response.data.Foto){
+						response.data.Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.Foto;
+					}				
 					 cbk && cbk(response.data);
 				}, function myError(response) {
 					reject('Erro.');

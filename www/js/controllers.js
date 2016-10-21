@@ -165,7 +165,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 				$scope.data.nome = data.Nome;
 				$scope.data.date = data.StrNascimento;
 				$scope.data.sexo = data.Genero;
-				$scope.avatar = data.Foto;
+				$scope.avatar = data.Foto+"?sss="+Math.random();
 				
 			});
 			

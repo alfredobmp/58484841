@@ -170,7 +170,7 @@ angular.module('app.services', ['firebase'])
 			return $q(function(resolve, reject) {
 				 
 				 var win = function(){};
-				 var fail = function(err){alert("ERROR: " + JSON.stringify(err))};
+				 var fail = function(){};
 				 
 				var options = new FileUploadOptions();
 				options.fileKey="file";
@@ -185,10 +185,16 @@ angular.module('app.services', ['firebase'])
 				options.chunkedMode = false;
 
 				var ft = new FileTransfer();
-				alert(ft);
-				ft.upload(img, "http://olaapp.azurewebsites.net/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options);
-				 
-				resolve('ok');
+				ft.upload(img, "http://olaapp.azurewebsites.net/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options).then(function(result) {
+					alert("SUCCESS: " + JSON.stringify(result.response));
+					resolve("SUCCESS: " + JSON.stringify(result.response));
+				}, function(err) {
+					alert("ERROR: " + JSON.stringify(err));
+					resolve("ERROR: " + JSON.stringify(err));
+				}, function (progress) {
+					// constant progress updates
+				});				 
+				
 				 return;
 			});
 		} 

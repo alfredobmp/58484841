@@ -52,7 +52,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		}
 	});
 	$scope.$on('$ionicView.leave', function(){
-		//console.log('out');
+		////console.log('out');
 	});
 })
 .controller('loginCtrl', function($scope, $state, $ionicPopup,UsuarioServices, AuthService, $ionicSideMenuDelegate, $ionicLoading) {
@@ -217,7 +217,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		function setOptionsCam(srcType){
 		    return {
 		      quality: 100,
-		     // destinationType: Camera.DestinationType.DATA_URL,
+		      //destinationType: Camera.DestinationType.DATA_URL,
 		      destinationType: Camera.DestinationType.FILE_URI,
 		      sourceType: srcType,
 		      allowEdit: true,
@@ -235,6 +235,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		function displayImage(imageData) {
 			//$scope.avatar = "data:image/jpeg;base64," + imageData;
 			$scope.avatar = imageData;
+			alert($scope.avatar);
 		}
 
 		function msg(err) { }
@@ -246,7 +247,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		}
 		
 		function usar(){
-			console.log($scope.avatar);
+			//console.log($scope.avatar);
 		}
 
 		$ionicPopup.show({
@@ -261,7 +262,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 					UsuarioServices.changeImage($scope.avatar);
 				}
 			}]
-			});
+		});
 	}
 
 	$scope.preferencias = function( index ){
@@ -291,7 +292,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		
 		function associar(categoria,descricao,gosta){
 			InteresseService.associar(categoria,descricao,gosta,function(data){
-			//	console.log(data);
+			//	//console.log(data);
 			})
 		}
 		
@@ -521,7 +522,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 				window.localStorage.setItem('USER_DETAIL_LgtA',position.coords.longitude);
 				BuscaServices.buscaRaio($scope.data.distancia,position.coords.latitude, position.coords.longitude).then(function(result){$scope.searchItens = result;if(map){refreshMap()}});		   
 			}, function(error){
-			  //console.log("Cant get a location = "+error)
+			  ////console.log("Cant get a location = "+error)
 			  //$ionicLoading.hide();
 			});
         }, 500); 
@@ -604,7 +605,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	}
 	$scope.friends = [];
 	$scope.show = function(amigo){ 
-		//console.log(amigo);
+		////console.log(amigo);
 		window.localStorage.setItem('chatId', amigo.GuidAmizade)
 		window.localStorage.setItem('USER_DETAIL_ID', amigo.Guid)
 		$state.go('perfil');
@@ -698,7 +699,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 	setInterval(function(){		
 		for(var i = 0; i <arrUpdate.length; i++ ){
-			console.log(arrUpdate[i]);
+			//console.log(arrUpdate[i]);
 			//ref.update(arrUpdate[i]);
 			var updates = {}; 
 			updates['/users/' + arrUpdate[i].chatid + '/' + arrUpdate[i].id] = arrUpdate[i];

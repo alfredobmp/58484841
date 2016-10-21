@@ -185,16 +185,8 @@ angular.module('app.services', ['firebase'])
 				options.chunkedMode = false;
 
 				var ft = new FileTransfer();
-				ft.upload(img, "http://olaapp.azurewebsites.net/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options).then(function(result) {
-					alert("SUCCESS: " + JSON.stringify(result.response));
-					resolve("SUCCESS: " + JSON.stringify(result.response));
-				}, function(err) {
-					alert("ERROR: " + JSON.stringify(err));
-					resolve("ERROR: " + JSON.stringify(err));
-				}, function (progress) {
-					// constant progress updates
-				});				 
-				
+				ft.upload(img, "http://olaapp.azurewebsites.net/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options);
+				resolve('ok');				
 				 return;
 			});
 		} 
@@ -486,11 +478,11 @@ angular.module('app.services', ['firebase'])
 
     $http.get(ApiEndpoint.url)
     .success(function(data) {
-      //console.log('Got some data: ', data)
+      ////console.log('Got some data: ', data)
       q.resolve(data);
     })
     .error(function(error){
-      //console.log('Had an error')
+      ////console.log('Had an error')
       q.reject(error);
     })
 
@@ -503,11 +495,11 @@ angular.module('app.services', ['firebase'])
         ApiEndpoint.url,
         data)
     .success(function(data) {
-      console.log('Got some data: ', data)
+      //console.log('Got some data: ', data)
       q.resolve(data);
     })
     .error(function(error){
-      console.log('Had an error')
+      //console.log('Had an error')
       q.reject(error);
     })
 

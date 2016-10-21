@@ -235,7 +235,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		function displayImage(imageData) {
 			//$scope.avatar = "data:image/jpeg;base64," + imageData;
 			$scope.avatar = imageData;
-			alert($scope.avatar);
+			//alert($scope.avatar);
 		}
 
 		function msg(err) { }

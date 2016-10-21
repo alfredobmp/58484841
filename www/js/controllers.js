@@ -234,7 +234,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 		function displayImage(imageData) {
 			//$scope.avatar = "data:image/jpeg;base64," + imageData;
-			$scope.avatar = imageData;
+			setTimeout(function(){$scope.avatar = imageData;},2000);			
 			//alert($scope.avatar);
 		}
 

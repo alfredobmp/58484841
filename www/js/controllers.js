@@ -332,7 +332,13 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	}
 
 	$scope.salvar = function(){
-		var params = {Email:$scope.data.email,Nome:$scope.data.nome,Nascimento:$scope.data.date,Genero:$scope.data.sexo}
+		var dt = null;
+		if($scope.data.date){
+			var data = $scope.data.date.split('/');
+			dt = data[2]+"-"+data[1]+"-"+data[0];
+		}
+		console.log()
+		var params = {Email:$scope.data.email,Nome:$scope.data.nome,Nascimento:dt,Genero:$scope.data.sexo}
 		$ionicLoading.show();
 		UsuarioServices.save(params).then(function(data){
 			$ionicLoading.hide();

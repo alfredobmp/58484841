@@ -671,6 +671,10 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		$state.go('login');
 	}
 	
+	$scope.mensagens = [
+	
+	];
+	
 	var chatId = window.localStorage.getItem('chatId');
 	var receiver = window.localStorage.getItem('USER_DETAIL_ID');
 	var ref = firebase.database().ref('users/'+chatId);
@@ -680,18 +684,18 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	var arrChats = [];
 	
 	var load = 0;
-	  
+	 
 	var arrUpdate = [];	
 	ref.on("value", function(s) {
 		if(load == 0){
 			$ionicLoading.show();
 		}
+		arrChatMensages = [];
+		var arrTeste  = [];
 		var arr = s.val();
 		for(var i in arr){
 			var o = {};
 			o.id = i;
-			
-			
 			
 			if( arr[i].sender != AuthService.getUserId() && arr[i].status == 1){
 				arr[i].status = 2;
@@ -717,38 +721,31 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 			
 			if(!arrChat[o.chatid]){
 				arrChat[o.chatid] = [];
-			}
+			} 			
+			arrTeste.push(o);
+			arrChatMensages.push(o.id);
 			
-			$scope.mensagens.push(o);
-			arrChatMensages.push(o.id);	 
-			
-		}
+		} 
+		$scope.mensagens = arrTeste;
+		
 		if(load == 0){
 			$ionicLoading.hide();
 			load = 1;
 		}
 	});
 
-	setInterval(function(){		
-		for(var i = 0; i <arrUpdate.length; i++ ){
-			//console.log(arrUpdate[i]);
-			//ref.update(arrUpdate[i]);
-			var updates = {}; 
-			updates['/users/' + arrUpdate[i].chatid + '/' + arrUpdate[i].id] = arrUpdate[i];
-			firebase.database().ref().update(updates);			
-		}
-		arrUpdate = [];
-	},2000);
+	// setInterval(function(){		
+		// for(var i = 0; i <arrUpdate.length; i++ ){
+			// //console.log(arrUpdate[i]);
+			// //ref.update(arrUpdate[i]);
+			// var updates = {}; 
+			// updates['/users/' + arrUpdate[i].chatid + '/' + arrUpdate[i].id] = arrUpdate[i];
+			// firebase.database().ref().update(updates);			
+		// }
+		// arrUpdate = [];
+	// },2000);
 	
-	$scope.mensagens = [
-	/* 	{ type: 'me', text:'Olá User Tester', hour:'11h00', status:2},
-		{ type: 'me', text:'Olá User Tester', hour:'11h00', status:-1},
-		{ type: 'me', text:'Olá User Tester', hour:'11h00', status:2},
-		{ type: 'me', text:'Olá User Tester', hour:'11h00', status:2},
-		{ type: 'other', text:'Teste sua mensagem', hour:'11h10', status:-1},
-		{ type: 'me', text:'Como faço?', hour:'11h30', status:1},
-		{ type: 'other', text:'Digite aí sua mensagem', hour:'12h00', status:-1} */
-	];
+	
 
 	$scope.mensagem = {};
 

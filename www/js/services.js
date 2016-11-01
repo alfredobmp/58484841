@@ -38,26 +38,29 @@ angular.module('app.services', ['firebase'])
 			window.localStorage.setItem(prefix+section, JSON.stringify(obj));
 			window.localStorage.setItem(prefix+section+"Controle", true);
 		})
+	}
+	
+	function Get(section){	
+		var  control = get(prefix+section+"Controle")==="true";
+		if(control){
+			var obj = get(prefix+section);
+			if(obj){
+				return JSON.parse(obj);				
+			}
+		}		
+		return null;			 
 	}		
-	function Get(section){		
-		return $q(function(resolve, reject) {
-			var  control = get(prefix+section+"Controle")==="true";
-			if(control){
-				var obj = get(prefix+section);
-				if(obj){
-					resolve(JSON.parse(obj));				
-				}
-			}		
-			reject( null);		
-		});
-	}		
+	
 	function Resset(section){		
 		set(prefix+section+"Controle",false);		
 	}
+	
+	var xxx = 1;
 	return {
 		get:Get,
 		set:Set,
-		resset:Resset		
+		resset:Resset,
+xxx:xxx		
 	}		
 }).service('BuscaServices', function($q, $http, USER_ROLES,AuthService,CacheServices) {	
 	function buscaRaio(raio,lat,lgn){
@@ -177,7 +180,7 @@ angular.module('app.services', ['firebase'])
 		buscaNome:buscaNome
 	}			
 })
-.service('UsuarioServices', function($q, $http, USER_ROLES,AuthService) {
+.service('UsuarioServices', function($q, $http, USER_ROLES,AuthService,CacheServices) {
 		function changeImage(img){
 			return $q(function(resolve, reject) {
 				 
@@ -206,17 +209,24 @@ angular.module('app.services', ['firebase'])
 		
 		function getUsusario(cbk){
 			return $q(function(resolve, reject) {
-				 $http({
-					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Usuario/Obter?Guid="+AuthService.getUserId()
-				}).then(function mySucces(response) { 
-					if(response.data && response.data.Foto){
-						response.data.Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.Foto;
-					}				
-					 cbk && cbk(response.data);
-				}, function myError(response) {
-					reject('Erro.'); 
-				});
+				 var obj = CacheServices.get('user');
+				if(obj){ 
+					resolve(JSON.parse(obj));		 
+				}else{			
+					$http({
+						method : "GET",
+						url : "http://olaapp.azurewebsites.net/Usuario/Obter?Guid="+AuthService.getUserId()
+					}).then(function mySucces(response) { 
+						if(response.data && response.data.Foto){
+							response.data.Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.Foto;
+						}
+						CacheServices.set('user',JSON.stringify(response.data));
+						resolve(response.data);
+					}, function myError(response) {
+						reject('Erro.'); 
+					});
+				}
+				
 			});			
 		}
 		
@@ -262,14 +272,13 @@ angular.module('app.services', ['firebase'])
 					url : "http://olaapp.azurewebsites.net/Usuario/Salvar?Guid="+AuthService.getUserId(),
 					params:data
 				}).then(function mySucces(response) {
+					CacheServices.set('user',null);
 					resolve(response.data);
 				}, function myError(response) {
 					reject('Erro.');
 				});
 			});			
 		}
-		
-		
 		
 		function AddNew(data){			
 			return $q(function(resolve, reject) {
@@ -353,17 +362,23 @@ angular.module('app.services', ['firebase'])
 	}
 })
 
-.service('InteresseService', function($q, $http, USER_ROLES,AuthService) {
+.service('InteresseService', function($q, $http, USER_ROLES,AuthService,CacheServices) {
 		function Get(cbk){
 			return $q(function(resolve, reject) {
-				 $http({
-					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Interesse/listar?Guid="+AuthService.getUserId()
-				}).then(function mySucces(response) {
-					cbk && cbk(response.data.Result); 
-				}, function myError(response) {
-					reject('Erro.');
-				});
+				var lst = CacheServices.get('interesses');
+				if(lst){
+					resolve(JSON.parse(lst));
+				}else{	
+					$http({
+						method : "GET",
+						url : "http://olaapp.azurewebsites.net/Interesse/listar?Guid="+AuthService.getUserId()
+					}).then(function mySucces(response) {
+						CacheServices.set('interesses',JSON.stringify(response.data.Result));
+						resolve(response.data.Result); 
+					}, function myError(response) {
+						reject('Erro.');
+					});
+				}
 			});
 		}
 		
@@ -373,6 +388,7 @@ angular.module('app.services', ['firebase'])
 					method : "GET",
 					url : "http://olaapp.azurewebsites.net/Interesse/associar?Categoria="+categoria+"&Descricao="+descricao+"&Gosta="+gosta+"&Guid="+AuthService.getUserId()
 				}).then(function mySucces(response) {
+					CacheServices.set('interesses',null);
 					cbk && cbk(response.data); 
 				}, function myError(response) {
 					reject('Erro.');

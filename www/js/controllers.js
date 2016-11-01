@@ -24,14 +24,15 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 	$scope.logout = function() {
 		AuthService.logout();
-		var alertPopup = $ionicPopup.alert({
-            title: 'Atenção!',
-            template: 'Sessão expirada.'
-        });
-		alertPopup.then(function(res) { 
-			$state.go('login'); 
-			$ionicSideMenuDelegate.toggleRight();
-		});
+		// var alertPopup = $ionicPopup.alert({
+            // title: 'Atenção!',
+            // template: 'Sessão expirada.'
+        // });
+		// alertPopup.then(function(res) { 
+			// $state.go('login'); 
+			// $ionicSideMenuDelegate.toggleRight();
+		// });
+		$state.go('login');
 	};
 
 	$scope.backButton = function() {
@@ -159,17 +160,15 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	$ionicLoading.show();
 
 	 $scope.$on('$ionicView.enter', function() {
-		 
-			UsuarioServices.getUsusario(function(data){ 
+			UsuarioServices.getUsusario().then(function(data){ 
 				$scope.data.email = data.Email;				
 				$scope.data.nome = data.Nome;
 				$scope.data.date = data.StrNascimento;
 				$scope.data.sexo = data.Genero;
-				$scope.avatar = data.Foto+"?sss="+Math.random();
-				
+				$scope.avatar = data.Foto+"?sss="+Math.random();				
 			});
 			
-			InteresseService.Get(function(data){				
+			InteresseService.Get().then(function(data){				
 				$scope.interesses = [];
 				for(var i = 0; i < data.length;i++){
 					var arrGosto = [];
@@ -194,11 +193,12 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	  })
 	  
 	if( !AuthService.isAuthenticated() ){
-		var alertPopup = $ionicPopup.alert({
-            title: 'Atenção!',
-            template: 'Sessão expirada.'
-        });
-		alertPopup.then(function(res) { $state.go('login'); });
+		// var alertPopup = $ionicPopup.alert({
+            // title: 'Atenção!',
+            // template: 'Sessão expirada.'
+        // });
+		// alertPopup.then(function(res) { $state.go('login'); });
+		$state.go('login');
 	}
 
 
@@ -333,11 +333,13 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 	$scope.salvar = function(){
 		var params = {Email:$scope.data.email,Nome:$scope.data.nome,Nascimento:$scope.data.date,Genero:$scope.data.sexo}
+		$ionicLoading.show();
 		UsuarioServices.save(params).then(function(data){
+			$ionicLoading.hide();
 			 var alertPopup = $ionicPopup.alert({
                 title: 'Aviso.',
                 template: 'Dados enviados com sucesso.'
-            });
+            })
 		});
 	}
 })
@@ -350,7 +352,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 })
 
-.controller('perfilCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading,UsuarioServices) {
+.controller('perfilCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading,UsuarioServices,CacheServices) {
 	if( !AuthService.isAuthenticated() ){
 		var alertPopup = $ionicPopup.alert({
             title: 'Atenção!',
@@ -360,9 +362,10 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	}
 	
 	$scope.$on('$ionicView.enter', function(){
-		loadPerfil();
+	 
+			loadPerfil(); 
 	});
-
+ 
 	
 	function loadPerfil(){
 		$ionicLoading.show();
@@ -400,6 +403,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		}
 	
 	}
+	
 	$scope.perfil = {
 		avatar: '',
 		email: '',
@@ -483,7 +487,15 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	
 	$scope.add = function(id){		
 		UsuarioServices.add(id).then(function(){
-			loadPerfil();
+			$ionicPopup.show({
+			template: 'Contato adicionado com sucesso!',
+			scope: $scope,
+			buttons: [ { text: 'FECHAR', type: 'button-positive' ,
+				onTap: function(e) {
+					loadPerfil();					 
+				}
+			}]
+		  });			
 		});	
 	}
 	
@@ -492,17 +504,18 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		    template: '<img ng-src="{{perfil.avatar}}" width="230"/> ',
 		    scope: $scope,
 		    buttons: [ { text: 'FECHAR', type: 'button-positive' } ]
-		  });
+		});
 	}
 })
    
 .controller('buscaListaCtrl', function($scope, $state, $ionicPopup, AuthService, BuscaServices, $timeout, $ionicSideMenuDelegate, $ionicLoading, $compile, $cordovaGeolocation) {
 	if( !AuthService.isAuthenticated() ){
-		var alertPopup = $ionicPopup.alert({
-            title: 'Atenção!',
-            template: 'Sessão expirada.'
-        });
-		alertPopup.then(function(res) { $state.go('login'); });
+		// var alertPopup = $ionicPopup.alert({
+            // title: 'Atenção!',
+            // template: 'Sessão expirada.'
+        // });
+		// alertPopup.then(function(res) { $state.go('login'); });
+		$state.go('login');
 	}
 
 	$scope.searchItens = BuscaServices.buscaRaio();
@@ -602,11 +615,12 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
    
 .controller('amigosCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading,BuscaServices) {
 	if( !AuthService.isAuthenticated() ){
-		var alertPopup = $ionicPopup.alert({
-            title: 'Atenção!',
-            template: 'Sessão expirada.'
-        });
-		alertPopup.then(function(res) { $state.go('login'); });
+		// var alertPopup = $ionicPopup.alert({
+            // title: 'Atenção!',
+            // template: 'Sessão expirada.'
+        // });
+		// alertPopup.then(function(res) { $state.go('login'); });
+		$state.go('login');
 	}
 	$scope.friends = [];
 	$scope.show = function(amigo){ 
@@ -630,11 +644,12 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
    
 .controller('solicitacoesCtrl', function($scope, $state, $ionicPopup, AuthService,BuscaServices, $ionicLoading) {
 	if( !AuthService.isAuthenticated() ){
-		var alertPopup = $ionicPopup.alert({
-            title: 'Atenção!',
-            template: 'Sessão expirada.'
-        });
-		alertPopup.then(function(res) { $state.go('login'); });
+		// var alertPopup = $ionicPopup.alert({
+            // title: 'Atenção!',
+            // template: 'Sessão expirada.'
+        // });
+		// alertPopup.then(function(res) { $state.go('login'); });
+		$state.go('login');
 	}	
 	
 	$ionicLoading.show();
@@ -648,11 +663,12 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 .controller('chatCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicScrollDelegate, $cordovaVibration, $timeout, $ionicLoading) {
 
 	if( !AuthService.isAuthenticated() ){
-		var alertPopup = $ionicPopup.alert({
-            title: 'Atenção!',
-            template: 'Sessão expirada.'
-        });
-		alertPopup.then(function(res) { $state.go('login'); });
+		// var alertPopup = $ionicPopup.alert({
+            // title: 'Atenção!',
+            // template: 'Sessão expirada.'
+        // });
+		// alertPopup.then(function(res) { $state.go('login'); });
+		$state.go('login');
 	}
 	
 	var chatId = window.localStorage.getItem('chatId');

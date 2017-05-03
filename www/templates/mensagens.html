@@ -1,0 +1,16 @@
+<ion-view title="Olá" id="page3" class=" ">
+    <ion-content padding="true" class="has-header">
+        <ion-list id="amigos-list3" class=" ">
+            <div class="item item-input item-icon-right">
+                <input type="search" placeholder="Buscar" ng-model="data.inputSearch">
+                <icon class="icon positive ion-search" ng-click="buscar()"></i>
+            </div>
+            <ion-scroll zooming="false" direction="y" style="height: 420px">
+                <ion-item class="item-avatar" ng-repeat="item in friends|filter:search" item="item" ng-click="show(item)">
+                    <img src="{{item.Foto}}" />
+                    <p>{{item.Nome}}</p>
+                </ion-item>
+            </ion-scroll>
+        </ion-list>
+    </ion-content>
+</ion-view>

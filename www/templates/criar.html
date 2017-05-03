@@ -14,10 +14,14 @@
                 <i class="icon ion-android-person {{ (!novaContaForm.nome.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
                 <input type="text" name="nome" placeholder="Nome do usuário" ng-model="data.Nome" maxlength="50" ng-maxlength="50" required/>
             </label>
-            <label class="item item-input " id="login-input4">
-                <i class="icon ion-calendar {{ (!novaContaForm.date.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
-                <input type="text" name="date" onfocus="(this.type='date')" placeholder="Data de nascimento" ng-model="data.Nascimento" required/>
-            </label>
+            <div style="position: relative;">
+                <label class="item item-input " id="login-input4">
+                    <i class="icon ion-calendar {{ (!novaContaForm.date.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp;&nbsp;
+                    <input type="text" name="date" id="date" placeholder="Data de nascimento" ng-model="data.Nascimento2" required/>
+                    <!--input type="date" name="calendar" id="calendar"/-->
+                </label>
+                <!--button id="btCalendar" class="button-large button-icon ion-calendar positive" ng-click="openCalendario()"></button--> 
+            </div>
             <label class="item item-select " id="login-input5">
                 <i class="icon ion-person-stalker {{ (!novaContaForm.sexo.$valid) ? 'assertive' : 'positive'}}"></i> &nbsp; <small class="cinza">Sexo</small> &nbsp; 
                 <select ng-model="data.Genero" name="sexo" required>

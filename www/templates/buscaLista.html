@@ -1,12 +1,13 @@
 <ion-view title="Olá" id="page3" class=" " cache-view="false">
-    <div class="bar bar-subheader">
+    <div class="bar bar-subheader"> 		
         <div class="item range">Distância
-            <input ng-model="data.distancia" type="range" value="50" min="1" max="1000">
-            <label>{{data.distancia}} km</label>
+            <input ng-model="data.distancia" type="range" value="0" min="1" max="10">
+            <label>{{data.distancia}} km&nbsp;</label>
         </div>
         <div class=" button-bar ">
             <button id="buscaLista" class=" button button-positive button-block icon ion-android-menu " ng-click="buscarLista()" ></button>
-            <button id="buscaMapa" class=" button button-positive  button-block icon ion-map " ng-click="buscarMapa()"></button>
+            <button id="buscaMapa" class=" button button-positive  button-block icon ion-map " ng-click="buscarMapa()"></button> 
+            <button id="buscaMapa" class=" button button-positive  button-block icon ion-android-options " ng-click="showOptions()"></button> 
         </div>
     </div>
     <ion-content padding="true" class="has-subheader" id="boxLista" ng-show="box=='lista'">

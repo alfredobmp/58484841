@@ -25,7 +25,7 @@
   <plugin name="cordova-plugin-splashscreen" spec="4.0.0" />
   <plugin name="cordova-plugin-statusbar" spec="2.1.3" />
   <preference name="phonegap-version" value="cli-6.4.0" />
-  <plugin name="org.apache.cordova.geolocation" spec="0.3.10" source="pgb" />
+  <plugin name="org.apache.cordova.geolocation" source="pgb" />
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>

@@ -9,7 +9,7 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="js/ng-cordova.min.js"></script>
-    <script src="cordova.js"></script>
+     <script src="cordova.js"></script> 
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -49,6 +49,7 @@
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
     <script src="lib/jquery.min.js"></script>
+    <script src="js/jquery-mask.min.js"></script>
     <!-- Only required for Tab projects w/ pages in multiple tabs 
     <script src="lib/ionicuirouter/ionicUIRouter.js"></script>
     -->
@@ -84,11 +85,17 @@
             </ion-header-bar>
             <ion-content padding="false" class="side-menu-right has-header">
                 <ion-list id="menu-list1" class=" " data-componentid="list1">
-                    <!--ion-item class="item-icon-left  " id="menu-list-item1" data-componentid="list-item1">
-                        <i class="icon ion-ios-gear"></i>Configurações</ion-item-->
-                   <ion-item class="item-icon-left  " id="menu-list-item2" data-componentid="list-item2" ng-click="goTo('sobre')">
+                    <ion-item class="item-icon-left  " id="menu-list-item1" data-componentid="list-item1" ng-click="goTo('meuPerfil')">
+                        <i class="icon ion-person positive"></i>Perfil</ion-item>
+                   <ion-item class="item-icon-left  " id="menu-list-item2" data-componentid="list-item2">
+                        <i class="icon ion-information-circled positive"></i>Termos de uso</ion-item>
+                   <ion-item class="item-icon-left  " id="menu-list-item3" data-componentid="list-item3">
+                        <i class="icon ion-information-circled positive"></i>Dicas de segurança</ion-item>
+                   <ion-item class="item-icon-left  " id="menu-list-item4" data-componentid="list-item4" ng-click="goTo('sobre')">
                         <i class="icon ion-information-circled positive"></i>Sobre o aplicativo</ion-item>
-                    <ion-item class="item-icon-left  " id="menu-list-item3" data-componentid="list-item3" ng-click="logout()">
+                   <ion-item class="item-icon-left  " id="menu-list-item5" data-componentid="list-item5" ng-click="Descadastrar()">
+                        <i class="icon ion-information-circled positive"></i>Descadastrar</ion-item>
+                   <ion-item class="item-icon-left  " id="menu-list-item6" data-componentid="list-item6" ng-click="logout()">
                         <i class="icon ion-log-out positive"></i>Sair</ion-item>
                 </ion-list>
             </ion-content>

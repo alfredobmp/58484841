@@ -78,8 +78,8 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 .controller('loginCtrl', function($scope, $state, $ionicPopup,UsuarioServices, AuthService, $ionicSideMenuDelegate, $ionicLoading) {
 
 	$scope.data = {};
-	$scope.data.username = 'alfredo@bmp.com.br';
-	$scope.data.password = '123456';
+	$scope.data.username = '';
+	$scope.data.password = '';
 
 	if( AuthService.isAuthenticated() ){
 		$state.go('tabsController.buscaLista');

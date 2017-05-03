@@ -14,7 +14,7 @@ angular.module('app.services', ['firebase'])
 		if(AuthService.getUserId()){		
 			$http({
 				method : "GET",
-				url : "http://localhost:9034/usuario/KeepAlive?Guid="+AuthService.getUserId()
+				url : "http://cicareis-001-site1.itempurl.com/usuario/KeepAlive?Guid="+AuthService.getUserId()
 			});
 		}
 	},300000);
@@ -86,13 +86,13 @@ xxx:xxx
 				var result = [];				
 				$http({
 					method : "GET",
-					url : "http://localhost:9034/busca/Buscar?Guid="+AuthService.getUserId(),
+					url : "http://cicareis-001-site1.itempurl.com/busca/Buscar?Guid="+AuthService.getUserId(),
 					params:busca
 				}).then(function mySucces(response) { 
 					for(var i = 0;i < response.data.Result.length; i++){						
 						if(response.data.Result[i].Foto){
-							response.data.Result[i].Foto = "http://localhost:9034/Images/"+response.data.Result[i].Foto;
-							response.data.Result[i].ThumbFoto = "http://localhost:9034/Images/"+response.data.Result[i].ThumbFoto;
+							response.data.Result[i].Foto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.Result[i].Foto;
+							response.data.Result[i].ThumbFoto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.Result[i].ThumbFoto;
 						}
 					}
 					resolve(response.data.Result);
@@ -108,13 +108,13 @@ xxx:xxx
 				busca.NomeAmigo = nome;
 				$http({
 					method : "GET",
-					url : "http://localhost:9034/Amizade/ListarAmigos?Guid="+AuthService.getUserId(),
+					url : "http://cicareis-001-site1.itempurl.com/Amizade/ListarAmigos?Guid="+AuthService.getUserId(),
 					params:busca					
 				}).then(function mySucces(response) { 
 					for(var i = 0;i < response.data.result.length; i++){						
 						if(response.data.result[i].Foto){
-							response.data.result[i].Foto = "http://localhost:9034/Images/"+response.data.result[i].Foto;
-							response.data.result[i].ThumbFoto = "http://localhost:9034/Images/"+response.data.result[i].ThumbFoto;
+							response.data.result[i].Foto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.result[i].Foto;
+							response.data.result[i].ThumbFoto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.result[i].ThumbFoto;
 						}
 					} 
 					resolve(response.data.result);
@@ -166,12 +166,12 @@ xxx:xxx
 			return $q(function(resolve, reject) {				
 				$http({
 					method : "GET",
-					url : "http://localhost:9034/Amizade/ListarSolicitacao?Guid="+AuthService.getUserId()					
+					url : "http://cicareis-001-site1.itempurl.com/Amizade/ListarSolicitacao?Guid="+AuthService.getUserId()					
 				}).then(function mySucces(response) { 
 					for(var i = 0;i < response.data.result.length; i++){						
 						if(response.data.result[i].Foto){
-							response.data.result[i].Foto = "http://localhost:9034/Images/"+response.data.result[i].Foto;
-							response.data.result[i].ThumbFoto = "http://localhost:9034/Images/"+response.data.result[i].ThumbFoto;
+							response.data.result[i].Foto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.result[i].Foto;
+							response.data.result[i].ThumbFoto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.result[i].ThumbFoto;
 						}
 					}					
 					resolve(response.data.result);
@@ -207,7 +207,7 @@ xxx:xxx
 				options.chunkedMode = false;
 
 				var ft = new FileTransfer();
-				ft.upload(img, "http://localhost:9034/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options);
+				ft.upload(img, "http://cicareis-001-site1.itempurl.com/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options);
 				resolve('ok');				
 				 return;
 			});
@@ -222,10 +222,10 @@ xxx:xxx
 				}else{			
 					$http({
 						method : "GET",
-						url : "http://localhost:9034/Usuario/Obter?Guid="+AuthService.getUserId()
+						url : "http://cicareis-001-site1.itempurl.com/Usuario/Obter?Guid="+AuthService.getUserId()
 					}).then(function mySucces(response) { 
 						if(response.data && response.data.Foto){
-							response.data.Foto = "http://localhost:9034/Images/"+response.data.Foto;
+							response.data.Foto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.Foto;
 						}
 						CacheServices.set('user',JSON.stringify(response.data));
 						resolve(response.data);
@@ -246,11 +246,11 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Usuario/ObterPerfil",
+					url : "http://cicareis-001-site1.itempurl.com/Usuario/ObterPerfil",
 					params:params
 				}).then(function mySucces(response) { 					 
 					if(response.data.Foto){						
-						response.data.Foto = "http://localhost:9034/Images/"+response.data.Foto; 
+						response.data.Foto = "http://cicareis-001-site1.itempurl.com/Images/"+response.data.Foto; 
 					}					 
 					resolve(response.data);
 				}, function myError(response) {
@@ -263,7 +263,7 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Login/RessetSenha?Email="+email
+					url : "http://cicareis-001-site1.itempurl.com/Login/RessetSenha?Email="+email
 				}).then(function mySucces(response) {
 					 cbk && cbk(response.data);
 				}, function myError(response) {
@@ -276,7 +276,7 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Usuario/Descadastrar?Guid="+AuthService.getUserId()
+					url : "http://cicareis-001-site1.itempurl.com/Usuario/Descadastrar?Guid="+AuthService.getUserId()
 				}).then(function mySucces(response) {
 					 resolve(response);
 				}, function myError(response) {
@@ -289,7 +289,7 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Usuario/Salvar?Guid="+AuthService.getUserId(),
+					url : "http://cicareis-001-site1.itempurl.com/Usuario/Salvar?Guid="+AuthService.getUserId(),
 					params:data
 				}).then(function mySucces(response) {
 					CacheServices.set('user',null);
@@ -304,7 +304,7 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Usuario/AddNew",
+					url : "http://cicareis-001-site1.itempurl.com/Usuario/AddNew",
 					params:data
 				}).then(function mySucces(response) { 
 					resolve(response.data);
@@ -322,7 +322,7 @@ xxx:xxx
 				params.Guid = AuthService.getUserId();
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Amizade/Add",
+					url : "http://cicareis-001-site1.itempurl.com/Amizade/Add",
 					params:params
 				}).then(function mySucces(response) {
 					resolve(response.data);
@@ -340,7 +340,7 @@ xxx:xxx
 			params.Guid = AuthService.getUserId();
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Amizade/Desfazer",
+					url : "http://cicareis-001-site1.itempurl.com/Amizade/Desfazer",
 					params:params
 				}).then(function mySucces(response) {
 					resolve(response.data);
@@ -359,7 +359,7 @@ xxx:xxx
 			params.Guid = AuthService.getUserId();
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Amizade/Desfazer",
+					url : "http://cicareis-001-site1.itempurl.com/Amizade/Desfazer",
 					params:params
 				}).then(function mySucces(response) {
 					resolve(response.data);
@@ -393,7 +393,7 @@ xxx:xxx
 				}else{	
 					$http({
 						method : "GET",
-						url : "http://localhost:9034/Interesse/listar?Guid="+AuthService.getUserId()
+						url : "http://cicareis-001-site1.itempurl.com/Interesse/listar?Guid="+AuthService.getUserId()
 					}).then(function mySucces(response) {
 						CacheServices.set('interesses',JSON.stringify(response.data.Result));
 						resolve(response.data.Result); 
@@ -420,7 +420,7 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://localhost:9034/Interesse/associar?Categoria="+categoria+"&Descricao="+descricao+"&Gosta="+gosta+"&Guid="+AuthService.getUserId()
+					url : "http://cicareis-001-site1.itempurl.com/Interesse/associar?Categoria="+categoria+"&Descricao="+descricao+"&Gosta="+gosta+"&Guid="+AuthService.getUserId()
 				}).then(function mySucces(response) {
 					CacheServices.set('interesses',null);
 					cbk && cbk(response.data); 
@@ -491,10 +491,10 @@ xxx:xxx
 
     var login = function(name, pw) {
         return $q(function(resolve, reject) {	
-			console.log("http://localhost:9034/login/login?Email="+name+"&Senha="+pw);
+			console.log("http://cicareis-001-site1.itempurl.com/login/login?Email="+name+"&Senha="+pw);
 			$http({
 				method : "GET",
-				url : "http://localhost:9034/login/login?Email="+name+"&Senha="+pw
+				url : "http://cicareis-001-site1.itempurl.com/login/login?Email="+name+"&Senha="+pw
 			}).then(function mySucces(response) {
 				if(response.data.token){					
 					storeUserCredentials(response.data.token);

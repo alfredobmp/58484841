@@ -18,6 +18,7 @@
   <preference name="FadeSplashScreen" value="false"/>
   <preference name="android-minSdkVersion" value="16"/>
   <preference name="BackupWebStorage" value="none"/>
+  <preference  name="phonegap-version"  value= "3.7.0"  />
   <plugin name="cordova-plugin-device" spec="1.1.2" />
   <plugin name="cordova-plugin-camera" spec="2.2.0" />
   <plugin name="cordova-plugin-console" spec="1.0.3" />

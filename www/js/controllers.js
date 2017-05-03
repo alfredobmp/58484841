@@ -1,10 +1,13 @@
 angular.module('app.controllers', [ 'ngCordova','firebase' ])
  
-
  .run(function(){
-
-	
- 
+ var config = {
+		apiKey: "AIzaSyDirAkFtDaaACz_da2s5AH6rS9pU2liUsA",
+		authDomain: "base-eec9f.firebaseapp.com",
+		databaseURL: "https://base-eec9f.firebaseio.com",
+		storageBucket: "base-eec9f.appspot.com",
+	};
+	firebase.initializeApp(config); 
  })
 
 .constant('$ionicLoadingConfig', {
@@ -16,23 +19,38 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	showDelay: 0
 })
 
-.controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicSideMenuDelegate, $ionicHistory, $ionicLoading) {
+.controller('AppCtrl', function($scope, $state, $ionicPopup, UsuarioServices,AuthService, $ionicSideMenuDelegate, $ionicHistory, $ionicLoading) {
 	$scope.goTo = function(page) {
 		$ionicSideMenuDelegate.toggleRight();
 		$state.go(page);
 	};
+	
+	$scope.Descadastrar = function(){
+		 var confirmPopup = $ionicPopup.confirm({
+			 title: 'Descadastrar',
+			 template: 'Você tem certeza?'
+		  });
+
+		  confirmPopup.then(function(res) {
+			 if(res) {
+				UsuarioServices.Describe().then( function (){ 
+					AuthService.logout();
+					$state.go('login'); 
+				});				
+			 }
+		  });
+	}
 
 	$scope.logout = function() {
 		AuthService.logout();
-		// var alertPopup = $ionicPopup.alert({
-            // title: 'Atenção!',
-            // template: 'Sessão expirada.'
-        // });
-		// alertPopup.then(function(res) { 
-			// $state.go('login'); 
-			// $ionicSideMenuDelegate.toggleRight();
-		// });
-		$state.go('login');
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Sessão expirada.'
+        });
+		alertPopup.then(function(res) { 
+			$state.go('login'); 
+			$ionicSideMenuDelegate.toggleRight();
+		});
 	};
 
 	$scope.backButton = function() {
@@ -45,6 +63,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		$scope.showBackButton = false;
 		switch($state.current.name){
 			case 'sobre':
+			case 'meuPerfil':
 			case 'perfil':
 			case 'chat':
 			case 'criar':
@@ -53,33 +72,31 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		}
 	});
 	$scope.$on('$ionicView.leave', function(){
-		////console.log('out');
+		//console.log('out');
 	});
 })
 .controller('loginCtrl', function($scope, $state, $ionicPopup,UsuarioServices, AuthService, $ionicSideMenuDelegate, $ionicLoading) {
 
 	$scope.data = {};
+	$scope.data.username = 'alfredo@bmp.com.br';
+	$scope.data.password = '123456';
 
 	if( AuthService.isAuthenticated() ){
-		$state.go('tabsController.meuPerfil');
+		$state.go('tabsController.buscaLista');
 	}
 	
 	/*$scope.data.username = "alfredo@projectmaker.com.br";
 	$scope.data.password = "123456"; */
-	
-	$scope.data.username = "";
-	$scope.data.password = "";
 
 	$scope.login = function(){
-		$ionicLoading.show();
+		
 		AuthService.login($scope.data.username, $scope.data.password).then(function(authenticated) {
-            $state.go('tabsController.meuPerfil');
+            $state.go('tabsController.buscaLista');
         }, function(err) {
             var alertPopup = $ionicPopup.alert({
                 title: 'Dados incorretos',
                 template: 'Por favor, verifique seu email e senha.'
             });
-			$ionicLoading.hide();
         });
 	}
 
@@ -92,7 +109,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	$scope.data.email = "";
 	$scope.esqueceuSenha = function(){
 		$ionicPopup.show({
-				template: '<p>Por favor, indique seu email cadastrado em sua conta para enviarmos o procedimento de renovação da senha.</p><div class="item item-input"><i class="icon ion-email positive"></i> &nbsp;&nbsp; <input type="email" name="email" placeholder="Email" ng-model="data.email" maxlength="50" ng-maxlength="50"/> ',
+				template: '<p>Por favor, indique o email cadastrado para enviarmos o procedimento de renovação da senha.</p><div class="item item-input"><i class="icon ion-email positive"></i> &nbsp;&nbsp; <input type="email" name="email" placeholder="Email" ng-model="data.email" maxlength="50" ng-maxlength="50"/> ',
 				title: 'Esqueceu a senha?',
 				scope: $scope,
 				buttons: 
@@ -111,16 +128,21 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	$scope.arrSexo = ["","Masculino","Feminino"];
 	$scope.data = {};
 	$scope.criar = function(){
-		$ionicLoading.show();
-		if( $scope.novaContaForm.$valid ){		
-			$ionicLoading.hide();
-			var alertPopup = $ionicPopup.alert({
+		if( $scope.novaContaForm.$valid ){			
+			  	
+			var date = $scope.data.Nascimento2.split("/");
+			if(date.length == 3){
+				$scope.data.Nascimento = date[2]+"-"+date[1]+"-"+date[0];			
+			}			
+			//function(){alertPopup.then(function(res) { $state.go('login'); });});
+			
+			var fok = function(){ $ionicPopup.alert({
 	            title: 'Parabéns!',
 	            template: 'Conta criada com sucesso.'
-	        });	 		
-			UsuarioServices.AddNew($scope.data).then(function(){alertPopup.then(function(res) { $state.go('login'); });});
+	        }).then(function(res) { $state.go('login'); }); }
+			var ferro = function(e){ alert(e) }
+			UsuarioServices.AddNew($scope.data).then(fok,ferro);
 		}else{
-			$ionicLoading.hide();
 			var alertPopup = $ionicPopup.alert({
 	            title: 'Atenção!',
 	            template: 'Preencha os campos corretamente.'
@@ -128,17 +150,49 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 			alertPopup.then(function(res) {  });
 		}
 	}
+$('#date').show().mask("00/00/0000", {placeholder: "__/__/____"});
+	/*$("#calendar").hide().unbind('blur').bind('blur',function(){
+		var date = $("#calendar").val().split("-");
+		$("#date").show().val( date[2]+"/"+date[1]+"/"+date[0] ).focus();
+		$("#calendar").hide();
+		$scope.calendarioAtivo = false;
+	});
+
+	
+
+	$scope.calendarioAtivo = false;
+	$scope.openCalendario = function(){
+		if( !$scope.calendarioAtivo ){
+			$("#calendar").show().focus();
+			$("#date").hide();
+			$scope.calendarioAtivo = true;
+		}else{
+			$("#calendar").hide();
+			$("#date").show().focus();
+			$scope.calendarioAtivo = false;
+		}
+	};*/
+
+	$("#date").unbind('blur').bind('blur',function(){
+		if( $("#date").val() != '' ){
+			var d = new Date();
+			var n = d.getFullYear();
+			var date = $("#date").val().split("/");
+
+			if( n - date[2] < 18  ){
+				var alertPopup = $ionicPopup.alert({
+	                title: 'Ops',
+	                template: 'Você é menor de 18 anos. Leia com atenção os Termos e Condições de Uso.'
+	            });
+			}
+		}
+	});
 
 	$scope.modal = "";
-	/*$scope.data.Email = "alfredo@bmp.com.br";
-	$scope.data.Genero = 0;
-	$scope.data.Nascimento = "1987-01-15";
-	$scope.data.Nome = "Alfredo 1";
-	$scope.data.Senha = "123456";*/
-	
 	$scope.data.Email = "";
 	$scope.data.Genero = 0;
 	$scope.data.Nascimento = "";
+	$scope.data.Nascimento2 = "";
 	$scope.data.Nome = "";
 	$scope.data.Senha = "";
 	
@@ -158,8 +212,8 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 .controller('meuPerfilCtrl', function($scope, $state, $ionicPopup, UsuarioServices,InteresseService,AuthService, $cordovaCamera, $ionicScrollDelegate, $ionicLoading) {
 
 	$ionicLoading.show();
-
 	 $scope.$on('$ionicView.enter', function() {
+		 
 			UsuarioServices.getUsusario().then(function(data){ 
 				$scope.data.email = data.Email;				
 				$scope.data.nome = data.Nome;
@@ -168,6 +222,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 				$scope.avatar = data.Foto+"?sss="+Math.random();				
 			});
 			
+			$ionicLoading.show();
 			InteresseService.Get().then(function(data){				
 				$scope.interesses = [];
 				for(var i = 0; i < data.length;i++){
@@ -193,12 +248,11 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	  })
 	  
 	if( !AuthService.isAuthenticated() ){
-		// var alertPopup = $ionicPopup.alert({
-            // title: 'Atenção!',
-            // template: 'Sessão expirada.'
-        // });
-		// alertPopup.then(function(res) { $state.go('login'); });
-		$state.go('login');
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Sessão expirada.'
+        });
+		alertPopup.then(function(res) { $state.go('login'); });
 	}
 
 
@@ -217,7 +271,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		function setOptionsCam(srcType){
 		    return {
 		      quality: 100,
-		      //destinationType: Camera.DestinationType.DATA_URL,
+		     // destinationType: Camera.DestinationType.DATA_URL,
 		      destinationType: Camera.DestinationType.FILE_URI,
 		      sourceType: srcType,
 		      allowEdit: true,
@@ -234,8 +288,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 		function displayImage(imageData) {
 			//$scope.avatar = "data:image/jpeg;base64," + imageData;
-			setTimeout(function(){$scope.avatar = imageData;},2000);			
-			//alert($scope.avatar);
+			$scope.avatar = imageData;
 		}
 
 		function msg(err) { }
@@ -247,7 +300,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		}
 		
 		function usar(){
-			//console.log($scope.avatar);
+			console.log($scope.avatar);
 		}
 
 		$ionicPopup.show({
@@ -262,7 +315,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 					UsuarioServices.changeImage($scope.avatar);
 				}
 			}]
-		});
+			});
 	}
 
 	$scope.preferencias = function( index ){
@@ -292,19 +345,23 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		
 		function associar(categoria,descricao,gosta){
 			InteresseService.associar(categoria,descricao,gosta,function(data){
-			//	//console.log(data);
+			//	console.log(data);
 			})
 		}
 		
 		$scope.salvarItem = function(  ){
 			switch(box){
 				case 'gosto':
-					$scope.interesses[index].gosto.push( $scope.data.item );
-					associar($scope.interesses[index].text,$scope.data.item,true);
+					if( $scope.data.item != '' ){
+						$scope.interesses[index].gosto.push( $scope.data.item );
+						associar($scope.interesses[index].text,$scope.data.item,true);
+					}
 				break;
 				case 'naogosto':
-					$scope.interesses[index].naogosto.push( $scope.data.item );
-					associar($scope.interesses[index].text,$scope.data.item,false);
+					if( $scope.data.item != '' ){
+						$scope.interesses[index].naogosto.push( $scope.data.item );
+						associar($scope.interesses[index].text,$scope.data.item,false);
+					}
 				break;
 			}
 			$scope.data.item = '';
@@ -312,10 +369,10 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		$scope.data.item = "";
 		$ionicPopup.show({
 		    title: $scope.interesses[index].text,
-		    template: '<p>Informe o que você gosta e não gosta sobre este assunto:</p>'+
+		    template: '<p>Liste temas que você gosta ou não gosta sobre este assunto:</p>'+
 		    '<div class="button-bar"> '+
-			    '<button id="" class=" button button-positive icon ion-android-happy" ng-click="gosto()"></button>'+
-			    '<button id="" class=" button button-positive icon ion-android-sad" ng-click="naogosto()"></button>'+
+			    '<button id="" class=" button button-balanced icon ion-android-happy" ng-click="gosto()"></button>'+
+			    '<button id="" class=" button button-assertive icon ion-android-sad" ng-click="naogosto()"></button>'+
 			'</div> <div id="boxGosto">'+
 			    	'<p class="padding">Gosto</p>'+
 			    	'<ion-scroll style="height:162px"> <ion-item ng-repeat="gosto in interesses['+index+'].gosto" class="item-icon-right">{{gosto}} <a class="icon positive ion-close-round" ng-click="excluirItem($index)"></a> </ion-item> </ion-scroll>'+
@@ -324,30 +381,58 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 			    	'<ion-scroll style="height:162px"> <ion-item ng-repeat="naogosto in interesses['+index+'].naogosto" class="item-icon-right">{{naogosto}} <a class="icon positive ion-close-round" ng-click="excluirItem($index)"></a> </ion-item> </ion-scroll>'+
 			    '</div> <div class="item item-input item-icon-right">'+
 			    	'<input type="text" ng-model="data.item" placeholder="Inserir item ..."/>'+
-			    	'<a class="icon positive ion-archive" ng-click="salvarItem()"></a>'+
+			    	'<a class="icon positive ion-android-archive" ng-click="salvarItem()"></a>'+
 			    '</div>',
 		    scope: $scope,
-		    buttons: [ { text: 'Fechar', type: 'button-positive' } ]
+		    buttons: [ { text: 'CONCLUIR', type: 'button-positive' } ]
 		  });
 	}
 
 	$scope.salvar = function(){
-		var dt = null;
-		if($scope.data.date){
-			var data = $scope.data.date.split('/');
-			dt = data[2]+"-"+data[1]+"-"+data[0];
-		}
-		console.log()
-		var params = {Email:$scope.data.email,Nome:$scope.data.nome,Nascimento:dt,Genero:$scope.data.sexo}
-		$ionicLoading.show();
+		var params = {Email:$scope.data.email,Nome:$scope.data.nome,Nascimento:$scope.data.date,Genero:$scope.data.sexo}
 		UsuarioServices.save(params).then(function(data){
-			$ionicLoading.hide();
 			 var alertPopup = $ionicPopup.alert({
                 title: 'Aviso.',
                 template: 'Dados enviados com sucesso.'
-            })
+            });
 		});
 	}
+$('#date').show().mask("00/00/0000", {placeholder: "__/__/____"});
+	/*
+	$("#calendar").hide().unbind('blur').bind('blur',function(){
+		if( $("#calendar").val() != '' ){
+			var date = $("#calendar").val().split("-");
+			$("#date").show().val( date[2]+"/"+date[1]+"/"+date[0] ).focus();
+			$("#calendar").hide();
+		}
+	});
+
+	$('#date').show().mask("00/00/0000", {placeholder: "__/__/____"});
+
+	$scope.openCalendario = function(){
+		if( $("#calendar").css('display') == "none" ){
+			$("#calendar").show().focus();
+			$("#date").hide();
+		}else{
+			$("#calendar").hide();
+			$("#date").show().focus();
+		}
+	};*/
+
+	$("#date").unbind('blur').bind('blur',function(){
+		if( $("#date").val() != '' ){
+			var d = new Date();
+			var n = d.getFullYear();
+			var date = $("#date").val().split("/");
+
+			if( n - date[2] < 18  ){
+				var alertPopup = $ionicPopup.alert({
+	                title: 'Ops',
+	                template: 'Você é menor de 18 anos. Leia com atenção os Termos e Condições de Uso.'
+	            });
+			}
+		}
+	});
 })
    
 .controller('sobreCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading) {
@@ -358,7 +443,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 
 })
 
-.controller('perfilCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading,UsuarioServices,CacheServices) {
+.controller('perfilCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading,UsuarioServices) {
 	if( !AuthService.isAuthenticated() ){
 		var alertPopup = $ionicPopup.alert({
             title: 'Atenção!',
@@ -368,20 +453,19 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	}
 	
 	$scope.$on('$ionicView.enter', function(){
-	 
-			loadPerfil(); 
+		$ionicLoading.show();
+		loadPerfil(); 
+		$ionicLoading.hide();
 	});
- 
+
 	
 	function loadPerfil(){
-		$ionicLoading.show();
 		var chatId = window.localStorage.getItem('chatId'); 
 		var id = window.localStorage.getItem('USER_DETAIL_ID');
 		var latA = window.localStorage.getItem('USER_DETAIL_latA');
 		var LgtA = window.localStorage.getItem('USER_DETAIL_LgtA');
-		if(id){	
+		if(id){		  
 			UsuarioServices.getPerfil(id,latA,LgtA).then(function(perfil){	
-				$ionicLoading.hide();
 				$scope.perfil.nome = perfil.Nome;
 				$scope.perfil.avatar = perfil.Foto;
 				$scope.perfil.added = perfil.Amigo;
@@ -409,7 +493,6 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		}
 	
 	}
-	
 	$scope.perfil = {
 		avatar: '',
 		email: '',
@@ -493,15 +576,7 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	
 	$scope.add = function(id){		
 		UsuarioServices.add(id).then(function(){
-			$ionicPopup.show({
-			template: 'Contato adicionado com sucesso!',
-			scope: $scope,
-			buttons: [ { text: 'FECHAR', type: 'button-positive' ,
-				onTap: function(e) {
-					loadPerfil();					 
-				}
-			}]
-		  });			
+			loadPerfil();
 		});	
 	}
 	
@@ -510,26 +585,60 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		    template: '<img ng-src="{{perfil.avatar}}" width="230"/> ',
 		    scope: $scope,
 		    buttons: [ { text: 'FECHAR', type: 'button-positive' } ]
-		});
+		  });
 	}
 })
    
-.controller('buscaListaCtrl', function($scope, $state, $ionicPopup, AuthService, BuscaServices, $timeout, $ionicSideMenuDelegate, $ionicLoading, $compile, $cordovaGeolocation) {
+.controller('buscaListaCtrl', function($scope, $state, $ionicPopup,InteresseService, AuthService, BuscaServices, $timeout, $ionicSideMenuDelegate, $ionicLoading, $compile, $cordovaGeolocation, $ionicLoading) {
 	if( !AuthService.isAuthenticated() ){
-		// var alertPopup = $ionicPopup.alert({
-            // title: 'Atenção!',
-            // template: 'Sessão expirada.'
-        // });
-		// alertPopup.then(function(res) { $state.go('login'); });
-		$state.go('login');
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Sessão expirada.'
+        });
+		alertPopup.then(function(res) { $state.go('login'); });
 	}
-
+	$scope.filters = InteresseService.GetSearchFilter(); 
 	$scope.searchItens = BuscaServices.buscaRaio();
-	
 	$scope.data = {
-		distancia: 50
+		distancia: 1
 	}
-
+   
+	 
+	$scope.showOptions = function(){ 
+		$scope.filters = InteresseService.GetSearchFilter(); 
+		$ionicLoading.show();
+		InteresseService.Get().then(function(data){	 
+				$scope.interesses = [];
+				for(var i = 0; i < data.length;i++){
+					if(!data[i].Categoria){
+						data[i].checked = $scope.filters.length > 0 && $scope.filters.indexOf(data[i].Guid) != -1;					
+						$scope.interesses.push(data[i]);						
+					}
+				}  
+				
+				$ionicPopup.show({
+					title: "Opções",
+					template: '<p>Liste temas que você gosta:</p>'+
+						'<ion-scroll style="height:162px;"><ion-list>'+ 
+							'<li  ng-repeat="i in interesses" class="item item-checkbox" ng-click="selectFilter({{i}})">{{i.Descricao}}<label class="checkbox"><input type="checkbox" ng-checked="{{i.checked}}"></label></li>'+
+						'</ion-list></ion-scroll>',
+					scope: $scope,
+					buttons: [ { text: 'CONCLUIR', type: 'button-positive' } ]
+				  }).then(function(){doSearch();});				  
+				$ionicLoading.hide();		
+			});
+	}
+	
+	$scope.selectFilter = function(obj){		 
+		if($scope.filters.indexOf(obj.Guid) == -1){
+			$scope.filters.push(obj.Guid); 		
+		}else{
+			$scope.filters.splice($scope.filters.indexOf(obj.Guid));
+		}  
+		InteresseService.SetSearchFilter($scope.filters);		
+	}
+	
+	
 	var timeoutId = null;    
     $scope.$watch('data.distancia', function()
     {    
@@ -538,20 +647,23 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
         }   
         timeoutId = $timeout( function()
         {   
-			$ionicLoading.show();
             $timeout.cancel(timeoutId);
             timeoutId = null; 
-			$cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true}).then(function(position){
-				window.localStorage.setItem('USER_DETAIL_latA',position.coords.latitude);
-				window.localStorage.setItem('USER_DETAIL_LgtA',position.coords.longitude);
-				BuscaServices.buscaRaio($scope.data.distancia,position.coords.latitude, position.coords.longitude).then(function(result){$scope.searchItens = result;$ionicLoading.hide();if(map){refreshMap()};});		   
-			}, function(error){
-			  ////console.log("Cant get a location = "+error)
-			  $ionicLoading.hide();
-			});
-        }, 1000); 
+			doSearch();
+        }, 500); 
     });
 	
+	
+	function doSearch(){
+		$cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true}).then(function(position){
+			window.localStorage.setItem('USER_DETAIL_latA',position.coords.latitude);
+			window.localStorage.setItem('USER_DETAIL_LgtA',position.coords.longitude);
+			BuscaServices.buscaRaio($scope.data.distancia,position.coords.latitude, position.coords.longitude,$scope.filters).then(function(result){$scope.searchItens = result;if(map){refreshMap()}});		   
+		}, function(error){
+		  //console.log("Cant get a location = "+error)
+		  //$ionicLoading.hide();
+		});	
+	}
 	
 	function refreshMap(){
 		
@@ -617,27 +729,29 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		window.localStorage.setItem('USER_DETAIL_ID',user.Guid);
 		$state.go('perfil');
 	}	
+	
+	
+	
+	
 })
    
 .controller('amigosCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading,BuscaServices) {
 	if( !AuthService.isAuthenticated() ){
-		// var alertPopup = $ionicPopup.alert({
-            // title: 'Atenção!',
-            // template: 'Sessão expirada.'
-        // });
-		// alertPopup.then(function(res) { $state.go('login'); });
-		$state.go('login');
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Sessão expirada.'
+        });
+		alertPopup.then(function(res) { $state.go('login'); });
 	}
 	$scope.friends = [];
 	$scope.show = function(amigo){ 
-		////console.log(amigo);
+		//console.log(amigo);
 		window.localStorage.setItem('chatId', amigo.GuidAmizade)
 		window.localStorage.setItem('USER_DETAIL_ID', amigo.Guid)
 		$state.go('perfil');
 	}	
 	$scope.buscar = function(){
-		$ionicLoading.show();
-		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result;$ionicLoading.hide();});
+		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result;});
 	}
     $scope.data = { inputSearch: '' };
     /*$scope.search = function(item) {
@@ -648,18 +762,47 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	});
 })
    
+.controller('mensagensCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicLoading,BuscaServices) {
+	if( !AuthService.isAuthenticated() ){
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Sessão expirada.'
+        });
+		alertPopup.then(function(res) { $state.go('login'); });
+	}
+	$scope.friends = [];
+	$scope.show = function(amigo){ 
+		//console.log(amigo);
+		window.localStorage.setItem('chatId', amigo.GuidAmizade)
+		window.localStorage.setItem('USER_DETAIL_ID', amigo.Guid)
+		$state.go('perfil');
+	}	
+	$scope.buscar = function(){
+		BuscaServices.buscaNome($scope.data.inputSearch).then(function(result){$scope.friends = result;});
+	}
+    $scope.data = { inputSearch: '' };
+    /*$scope.search = function(item) {
+        return ( item.nome.indexOf($scope.data.inputSearch) != -1);
+    }*/
+	$scope.$on('$ionicView.enter', function() {
+		$scope.buscar();
+
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Página de teste, pois depende de reestruturação do backend das próximas versões.'
+        });
+	});
+})
+   
 .controller('solicitacoesCtrl', function($scope, $state, $ionicPopup, AuthService,BuscaServices, $ionicLoading) {
 	if( !AuthService.isAuthenticated() ){
-		// var alertPopup = $ionicPopup.alert({
-            // title: 'Atenção!',
-            // template: 'Sessão expirada.'
-        // });
-		// alertPopup.then(function(res) { $state.go('login'); });
-		$state.go('login');
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Sessão expirada.'
+        });
+		alertPopup.then(function(res) { $state.go('login'); });
 	}	
-	
-	$ionicLoading.show();
-	BuscaServices.solicitacoes().then(function(firends){$scope.friends = firends;$ionicLoading.hide();});
+	BuscaServices.solicitacoes().then(function(firends){$scope.friends = firends;});
 	$scope.show = function(amigo){	
 		window.localStorage.setItem('USER_DETAIL_ID',amigo.Guid);
 		$state.go('perfil');
@@ -669,17 +812,12 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 .controller('chatCtrl', function($scope, $state, $ionicPopup, AuthService, $ionicScrollDelegate, $cordovaVibration, $timeout, $ionicLoading) {
 
 	if( !AuthService.isAuthenticated() ){
-		// var alertPopup = $ionicPopup.alert({
-            // title: 'Atenção!',
-            // template: 'Sessão expirada.'
-        // });
-		// alertPopup.then(function(res) { $state.go('login'); });
-		$state.go('login');
+		var alertPopup = $ionicPopup.alert({
+            title: 'Atenção!',
+            template: 'Sessão expirada.'
+        });
+		alertPopup.then(function(res) { $state.go('login'); });
 	}
-	
-	$scope.mensagens = [
-	
-	];
 	
 	var chatId = window.localStorage.getItem('chatId');
 	var receiver = window.localStorage.getItem('USER_DETAIL_ID');
@@ -689,19 +827,15 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 	var arrChatMensages = [];
 	var arrChats = [];
 	
-	var load = 0;
-	 
+	  
 	var arrUpdate = [];	
 	ref.on("value", function(s) {
-		if(load == 0){
-			$ionicLoading.show();
-		}
-		arrChatMensages = [];
-		var arrTeste  = [];
 		var arr = s.val();
 		for(var i in arr){
 			var o = {};
 			o.id = i;
+			
+			
 			
 			if( arr[i].sender != AuthService.getUserId() && arr[i].status == 1){
 				arr[i].status = 2;
@@ -727,31 +861,34 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 			
 			if(!arrChat[o.chatid]){
 				arrChat[o.chatid] = [];
-			} 			
-			arrTeste.push(o);
-			arrChatMensages.push(o.id);
+			}
 			
-		} 
-		$scope.mensagens = arrTeste;
-		
-		if(load == 0){
-			$ionicLoading.hide();
-			load = 1;
+			$scope.mensagens.push(o);
+			arrChatMensages.push(o.id);	 
+			
 		}
 	});
 
-	// setInterval(function(){		
-		// for(var i = 0; i <arrUpdate.length; i++ ){
-			// //console.log(arrUpdate[i]);
-			// //ref.update(arrUpdate[i]);
-			// var updates = {}; 
-			// updates['/users/' + arrUpdate[i].chatid + '/' + arrUpdate[i].id] = arrUpdate[i];
-			// firebase.database().ref().update(updates);			
-		// }
-		// arrUpdate = [];
-	// },2000);
+	setInterval(function(){		
+		for(var i = 0; i <arrUpdate.length; i++ ){
+			//console.log(arrUpdate[i]);
+			//ref.update(arrUpdate[i]);
+			var updates = {}; 
+			updates['/users/' + arrUpdate[i].chatid + '/' + arrUpdate[i].id] = arrUpdate[i];
+			firebase.database().ref().update(updates);			
+		}
+		arrUpdate = [];
+	},2000);
 	
-	
+	$scope.mensagens = [
+	/* 	{ type: 'me', text:'Olá User Tester', hour:'11h00', status:2},
+		{ type: 'me', text:'Olá User Tester', hour:'11h00', status:-1},
+		{ type: 'me', text:'Olá User Tester', hour:'11h00', status:2},
+		{ type: 'me', text:'Olá User Tester', hour:'11h00', status:2},
+		{ type: 'other', text:'Teste sua mensagem', hour:'11h10', status:-1},
+		{ type: 'me', text:'Como faço?', hour:'11h30', status:1},
+		{ type: 'other', text:'Digite aí sua mensagem', hour:'12h00', status:-1} */
+	];
 
 	$scope.mensagem = {};
 
@@ -777,5 +914,8 @@ angular.module('app.controllers', [ 'ngCordova','firebase' ])
 		$timeout(function(){ $cordovaVibration.vibrate(100); }, 300);
 		$timeout(function(){ $cordovaVibration.vibrate(100); }, 600);
 	}
-}) 
+})
+ 
+ 
+ 
  

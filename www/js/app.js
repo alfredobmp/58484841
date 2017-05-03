@@ -9,8 +9,6 @@ angular.module('app', ['ionic', 'app.constants', 'app.controllers', 'app.routes'
 
 .run(function($ionicPlatform, $cordovaStatusbar) {
 	
-	
-	
 	$ionicPlatform.ready(function() {
 		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 		// for form inputs)
@@ -20,22 +18,17 @@ angular.module('app', ['ionic', 'app.constants', 'app.controllers', 'app.routes'
 		}
 		
 		if (window.StatusBar) {
-			$cordovaStatusbar.overlaysWebView(true);
-			$cordovaStatusbar.style(1);
-			$cordovaStatusbar.styleHex('#00618c');
-			$cordovaStatusbar.show();
+			StatusBar.overlaysWebView(true);
+			StatusBar.backgroundColorByHexString('#00618c');
 			var isVisible = $cordovaStatusbar.isVisible();
+		}
+
+		if(window.screen) {
+			//screen.lockOrientation('portrait');
 		}
 	});  
 });
-var config = {
-	apiKey: "AIzaSyDirAkFtDaaACz_da2s5AH6rS9pU2liUsA",
-	authDomain: "base-eec9f.firebaseapp.com",
-	databaseURL: "https://base-eec9f.firebaseio.com",
-	storageBucket: "base-eec9f.appspot.com",
-};
-firebase.initializeApp(config);  
-	
+
 Array.prototype.remove = function() {
     var what, a = arguments, L = a.length, ax;
     while (L && this.length) {

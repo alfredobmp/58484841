@@ -9,8 +9,15 @@ function set(key,value){
 
 angular.module('app.services', ['firebase'])
 
-.run(function(){
-
+.run(function($http,AuthService){ 	
+	setInterval(function(){
+		if(AuthService.getUserId()){		
+			$http({
+				method : "GET",
+				url : "http://localhost:9034/usuario/KeepAlive?Guid="+AuthService.getUserId()
+			});
+		}
+	},300000);
 	//var config = {
 	//	apiKey: "AIzaSyDirAkFtDaaACz_da2s5AH6rS9pU2liUsA",
 	//	authDomain: "base-eec9f.firebaseapp.com",
@@ -63,7 +70,7 @@ angular.module('app.services', ['firebase'])
 xxx:xxx		
 	}		
 }).service('BuscaServices', function($q, $http, USER_ROLES,AuthService,CacheServices) {	
-	function buscaRaio(raio,lat,lgn){
+	function buscaRaio(raio,lat,lgn,filerCat){
 			if(!raio){
 				return;
 			}	
@@ -75,17 +82,17 @@ xxx:xxx
 				busca.Raio = raio;
 				busca.LongitudeAtual = lat;
 				busca.LatitudeAtual = lgn;
-				
+				busca.CategoriaIds = filerCat;
 				var result = [];				
 				$http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/busca/Buscar?Guid="+AuthService.getUserId(),
+					url : "http://localhost:9034/busca/Buscar?Guid="+AuthService.getUserId(),
 					params:busca
 				}).then(function mySucces(response) { 
 					for(var i = 0;i < response.data.Result.length; i++){						
 						if(response.data.Result[i].Foto){
-							response.data.Result[i].Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.Result[i].Foto;
-							response.data.Result[i].ThumbFoto = "http://olaapp.azurewebsites.net/Images/"+response.data.Result[i].ThumbFoto;
+							response.data.Result[i].Foto = "http://localhost:9034/Images/"+response.data.Result[i].Foto;
+							response.data.Result[i].ThumbFoto = "http://localhost:9034/Images/"+response.data.Result[i].ThumbFoto;
 						}
 					}
 					resolve(response.data.Result);
@@ -101,13 +108,13 @@ xxx:xxx
 				busca.NomeAmigo = nome;
 				$http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Amizade/ListarAmigos?Guid="+AuthService.getUserId(),
+					url : "http://localhost:9034/Amizade/ListarAmigos?Guid="+AuthService.getUserId(),
 					params:busca					
 				}).then(function mySucces(response) { 
 					for(var i = 0;i < response.data.result.length; i++){						
 						if(response.data.result[i].Foto){
-							response.data.result[i].Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].Foto;
-							response.data.result[i].ThumbFoto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].ThumbFoto;
+							response.data.result[i].Foto = "http://localhost:9034/Images/"+response.data.result[i].Foto;
+							response.data.result[i].ThumbFoto = "http://localhost:9034/Images/"+response.data.result[i].ThumbFoto;
 						}
 					} 
 					resolve(response.data.result);
@@ -159,12 +166,12 @@ xxx:xxx
 			return $q(function(resolve, reject) {				
 				$http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Amizade/ListarSolicitacao?Guid="+AuthService.getUserId()					
+					url : "http://localhost:9034/Amizade/ListarSolicitacao?Guid="+AuthService.getUserId()					
 				}).then(function mySucces(response) { 
 					for(var i = 0;i < response.data.result.length; i++){						
 						if(response.data.result[i].Foto){
-							response.data.result[i].Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].Foto;
-							response.data.result[i].ThumbFoto = "http://olaapp.azurewebsites.net/Images/"+response.data.result[i].ThumbFoto;
+							response.data.result[i].Foto = "http://localhost:9034/Images/"+response.data.result[i].Foto;
+							response.data.result[i].ThumbFoto = "http://localhost:9034/Images/"+response.data.result[i].ThumbFoto;
 						}
 					}					
 					resolve(response.data.result);
@@ -200,7 +207,7 @@ xxx:xxx
 				options.chunkedMode = false;
 
 				var ft = new FileTransfer();
-				ft.upload(img, "http://olaapp.azurewebsites.net/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options);
+				ft.upload(img, "http://localhost:9034/Usuario/MudarFoto?Foto="+img+"&Guid="+AuthService.getUserId(), win, fail, options);
 				resolve('ok');				
 				 return;
 			});
@@ -215,10 +222,10 @@ xxx:xxx
 				}else{			
 					$http({
 						method : "GET",
-						url : "http://olaapp.azurewebsites.net/Usuario/Obter?Guid="+AuthService.getUserId()
+						url : "http://localhost:9034/Usuario/Obter?Guid="+AuthService.getUserId()
 					}).then(function mySucces(response) { 
 						if(response.data && response.data.Foto){
-							response.data.Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.Foto;
+							response.data.Foto = "http://localhost:9034/Images/"+response.data.Foto;
 						}
 						CacheServices.set('user',JSON.stringify(response.data));
 						resolve(response.data);
@@ -239,11 +246,11 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Usuario/ObterPerfil",
+					url : "http://localhost:9034/Usuario/ObterPerfil",
 					params:params
 				}).then(function mySucces(response) { 					 
 					if(response.data.Foto){						
-						response.data.Foto = "http://olaapp.azurewebsites.net/Images/"+response.data.Foto; 
+						response.data.Foto = "http://localhost:9034/Images/"+response.data.Foto; 
 					}					 
 					resolve(response.data);
 				}, function myError(response) {
@@ -256,9 +263,22 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Login/RessetSenha?Email="+email
+					url : "http://localhost:9034/Login/RessetSenha?Email="+email
 				}).then(function mySucces(response) {
 					 cbk && cbk(response.data);
+				}, function myError(response) {
+					reject('Erro.');
+				});
+			});			
+		}	
+		
+		function Describe(cbk){
+			return $q(function(resolve, reject) {
+				 $http({
+					method : "GET",
+					url : "http://localhost:9034/Usuario/Descadastrar?Guid="+AuthService.getUserId()
+				}).then(function mySucces(response) {
+					 resolve(response);
 				}, function myError(response) {
 					reject('Erro.');
 				});
@@ -269,7 +289,7 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Usuario/Salvar?Guid="+AuthService.getUserId(),
+					url : "http://localhost:9034/Usuario/Salvar?Guid="+AuthService.getUserId(),
 					params:data
 				}).then(function mySucces(response) {
 					CacheServices.set('user',null);
@@ -284,12 +304,12 @@ xxx:xxx
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Usuario/AddNew",
+					url : "http://localhost:9034/Usuario/AddNew",
 					params:data
-				}).then(function mySucces(response) {
+				}).then(function mySucces(response) { 
 					resolve(response.data);
-				}, function myError(response) {
-					reject('Erro.');
+				}, function myError(response) { 
+					reject(response.statusText);
 				});
 			});			
 		}
@@ -302,7 +322,7 @@ xxx:xxx
 				params.Guid = AuthService.getUserId();
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Amizade/Add",
+					url : "http://localhost:9034/Amizade/Add",
 					params:params
 				}).then(function mySucces(response) {
 					resolve(response.data);
@@ -320,7 +340,7 @@ xxx:xxx
 			params.Guid = AuthService.getUserId();
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Amizade/Desfazer",
+					url : "http://localhost:9034/Amizade/Desfazer",
 					params:params
 				}).then(function mySucces(response) {
 					resolve(response.data);
@@ -339,7 +359,7 @@ xxx:xxx
 			params.Guid = AuthService.getUserId();
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Amizade/Desfazer",
+					url : "http://localhost:9034/Amizade/Desfazer",
 					params:params
 				}).then(function mySucces(response) {
 					resolve(response.data);
@@ -358,20 +378,22 @@ xxx:xxx
 		bloquear:bloquear,
 		remove:remove,
 		getPerfil:getPerfil,
+		Describe:Describe,
 		changePass:changePass		
 	}
 })
 
 .service('InteresseService', function($q, $http, USER_ROLES,AuthService,CacheServices) {
 		function Get(cbk){
-			return $q(function(resolve, reject) {
+			return $q(function(resolve, reject) { 
 				var lst = CacheServices.get('interesses');
+				//var lst = null;
 				if(lst){
 					resolve(JSON.parse(lst));
 				}else{	
 					$http({
 						method : "GET",
-						url : "http://olaapp.azurewebsites.net/Interesse/listar?Guid="+AuthService.getUserId()
+						url : "http://localhost:9034/Interesse/listar?Guid="+AuthService.getUserId()
 					}).then(function mySucces(response) {
 						CacheServices.set('interesses',JSON.stringify(response.data.Result));
 						resolve(response.data.Result); 
@@ -382,11 +404,23 @@ xxx:xxx
 			});
 		}
 		
+		function GetSearchFilter(cbk){
+			var lst = CacheServices.get('interessesFilter');
+			if(lst){
+				return JSON.parse(lst);
+			}
+			return [];
+		}
+		
+		function SetSearchFilter(obj){
+			CacheServices.set('interessesFilter',JSON.stringify(obj));
+		}
+		
 		function associar(categoria,descricao,gosta,cbk){
 			return $q(function(resolve, reject) {
 				 $http({
 					method : "GET",
-					url : "http://olaapp.azurewebsites.net/Interesse/associar?Categoria="+categoria+"&Descricao="+descricao+"&Gosta="+gosta+"&Guid="+AuthService.getUserId()
+					url : "http://localhost:9034/Interesse/associar?Categoria="+categoria+"&Descricao="+descricao+"&Gosta="+gosta+"&Guid="+AuthService.getUserId()
 				}).then(function mySucces(response) {
 					CacheServices.set('interesses',null);
 					cbk && cbk(response.data); 
@@ -398,6 +432,8 @@ xxx:xxx
 		
 	return {
 		Get:Get,
+		GetSearchFilter:GetSearchFilter,
+		SetSearchFilter:SetSearchFilter,
 		associar:associar 
 		
 	}
@@ -454,10 +490,11 @@ xxx:xxx
     }
 
     var login = function(name, pw) {
-        return $q(function(resolve, reject) {			 
+        return $q(function(resolve, reject) {	
+			console.log("http://localhost:9034/login/login?Email="+name+"&Senha="+pw);
 			$http({
 				method : "GET",
-				url : "http://olaapp.azurewebsites.net/login/login?Email="+name+"&Senha="+pw
+				url : "http://localhost:9034/login/login?Email="+name+"&Senha="+pw
 			}).then(function mySucces(response) {
 				if(response.data.token){					
 					storeUserCredentials(response.data.token);

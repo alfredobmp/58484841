@@ -9,23 +9,11 @@ angular.module('app.routes', [])
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  .state('tabsController.meuPerfil', {
-    url: '/meu_perfil',
-    views: {
-      'tab1': {
-        templateUrl: 'templates/meuPerfil.html',
-        controller: 'meuPerfilCtrl'
-      }
-    },
-    data: {
-      authorizedRoles: [USER_ROLES.logon]
-    }
-  })
 
   .state('tabsController.buscaLista', {
     url: '/buscar',
     views: {
-      'tab2': {
+      'tab1': {
         templateUrl: 'templates/buscaLista.html',
         controller: 'buscaListaCtrl'
       }
@@ -38,9 +26,22 @@ angular.module('app.routes', [])
   .state('tabsController.amigos', {
     url: '/amigos',
     views: {
-      'tab3': {
+      'tab2': {
         templateUrl: 'templates/amigos.html',
         controller: 'amigosCtrl'
+      }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.logon]
+    }
+  })
+
+  .state('tabsController.mensagens', {
+    url: '/mensagens',
+    views: {
+      'tab3': {
+        templateUrl: 'templates/mensagens.html',
+        controller: 'mensagensCtrl'
       }
     },
     data: {
@@ -56,6 +57,16 @@ angular.module('app.routes', [])
         controller: 'solicitacoesCtrl'
       }
     },
+    data: {
+      authorizedRoles: [USER_ROLES.logon]
+    }
+  })
+
+
+  .state('meuPerfil', {
+    url: '/meu_perfil',
+    templateUrl: 'templates/meuPerfil.html',
+    controller: 'meuPerfilCtrl',
     data: {
       authorizedRoles: [USER_ROLES.logon]
     }
